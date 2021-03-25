@@ -1,0 +1,309 @@
+Ansible
+==========
+
+Things to know before working with ansible
+	
+	1) ansible is agentless ( means, we do not need to run any agent on remote servers for communication )
+	
+	2) ansible follows push model ( means we push the configuration from ansible controller to remote servers )
+	
+	3) ansible uses SSH protocol to communicate with remote servers
+	
+	4) ansible uses below methods for remote servers authentication
+	
+			password based
+			key based
+
+Ansible controller ( is the machine/host/server where we install ansible ) 
+
+	/etc/ansible default directory ( we have two important file in it )
+	
+		hosts ( default inventory file in which we can mention remote servers we want to apply/push the changes to)
+		
+		ansible.cfg  ( default ansible configuraton - can be used to customize as per our need )
+
+
+Ansible Terminlogy 
+
+	1) ansible ad-hoc commands ( single task that can be executed against remote servers )
+	
+	2) ansible playbooks  ( set of instructions written in a .yml file to execute against remote servers  )
+	
+	3) ansible facts ( information about remote servers collected ansible before running any task )
+	
+	4) ansible modules ( are the units of work that ansible ships to remote servers for executing the tasks )
+	
+	5) ansible role ( to break a playbook into multiple files. This simplifies writing complex playbooks, and it makes them easier to reuse )
+	
+		look at: https://docs.ansible.com/ansible/latest/reference_appendices/glossary.html     for more terms used in ansible. 
+		
+
+Docker:
+=============
+
+What is Docker ?
+
+Docker is a Containerization Platform which allows us to containerize an application/software (called as Docker Image) &
+also lets you run Containerized application/software
+
+Technical Deffinition:
+
+Docker is an open source software platform to create, deploy and manage virtualized application containers on a 
+common operating system (OS), with an ecosystem of allied tools.
+
+Docker is a set of platform as a service products that use OS-level virtualization to deliver software in packages called containers.
+
+Docker Architecture
+Docker Engine
+
+Have you tried to install Docker yet? 
+
+You might have noticed that you’re required to install not just Docker, but also something called dockerd.
+That is because Docker is a client-server application. 
+You must have both parts for running a Docker application on your computer. 
+This client-server tandem is called docker engine.
+
+The docker client is just a CLI tool to make requests against a REST API,
+which is responsible for interacting with the docker daemon or dockerd.
+dockerd will deal with the operative system to ensure the proper behaviour for the containers.
+
+
+Docker Engine Flow?
+
+Now we have a clear understanding of the main elements of Docker, how does it all work together
+Whenever a request is created in the Docker client, it’s sent to the Docker daemon and it will perform the required actions.
+
+Let’s use as an example running a redis container. We achieve that by running the instruction docker run redis.
+First, our computer will make a request to the configured docker host API, which is going to interact with the Docker daemon. 
+At this point, the daemon knows what it must do. It will look up the redis image on the host registry. 
+If it’s not present, a new lookup will be made, this time against the configured image registry (Docker Hub, ECR, ACR, GCR, …) 
+and pulled (downloaded). Then it will spawn a container based in the downloaded image.
+
+Docker Architecture?
+
+what is Docker Image ?
+A package which consists of an application/software with all its dependencies to run, Called as Docker Image
+Docker Image will have a base layer of minimal OS in it always, on top of OS layer we install software & its dependenci es.
+A Docker image is built up from a series of layers. Each layer represents an instruction that we run.
+A Docker image is a lightweight, standalone, executable package of software that includes everything needed to 
+run an application: code, runtime, system tools, system libraries and settings
+Docker Images are immutable
+Images are stored in a Docker registry such as registry.hub.docker.com
+
+what is Docker Container ?
+A container is runtime instance of a Docker Image
+A Container is the actual instantiation of the image just like how an object is an instantiation or an instance of a class.
+
+Advantages of Containers
+
+Physical vs. Virtual Machines vs. Container
+Physical	Virtaul Machines	Containers
+No virtualization	H/W level virtualization	OS level Vertualization
+Huge Maintenance Cost	Huge Maintenance Cost	No Maintenance Cost
+No Scalability	Scalability is Hard	Easily Scalable
+Huge Resource Wastage	Better Resource Usage but Dynamic Allocation is NOT Possible	Dynamic Resource Allocation isPossible
+
+Takes Longer Time to Initialize App (boot time)	Almost Same as Physical	Take Very Less Time to Initialize App (less boot time)
+The underlying technology
+Docker is written in Go and takes advantage of several features of the Linux kernel to deliver its functionality.
+
+Namespaces:
+
+Docker uses a technology called namespaces to provide the isolated workspace called the container.
+When you run a container, Docker creates a set of namespaces for that container.
+These namespaces provide a layer of isolation. 
+Each aspect of a container runs in a separate namespace and its access is limited to that namespace.
+
+Docker Engine uses namespaces such as the following on Linux:
+
+The pid namespace: Process isolation (PID: Process ID).
+The net namespace: Managing network interfaces (NET: Networking).
+The ipc namespace: Managing access to IPC resources (IPC: InterProcess Communication).
+The mnt namespace: Managing filesystem mount points (MNT: Mount).
+The uts namespace: Isolating kernel and version identifiers. (UTS: Unix Timesharing System).
+
+Control groups
+
+Docker Engine on Linux also relies on another technology called control groups (cgroups). 
+A cgroup limits an application to a specific set of resources.
+Control groups allow Docker Engine to share available hardware resources to containers and optionally enforce limits and constraints. 
+For example, you can limit the memory available to a specific container.
+
+Union file systems
+
+Union file systems, or UnionFS, are file systems that operate by creating layers, making them very lightweight and fast.
+Docker Engine uses UnionFS to provide the building blocks for containers. 
+Docker Engine can use multiple UnionFS variants, including AUFS, btrfs, vfs, and DeviceMapper.
+
+Container format
+
+Docker Engine combines the namespaces, control groups, and UnionFS into a wrapper called a container format.
+The default container format is libcontainer. In the future, 
+Docker may support other container formats by integrating with technologies such as BSD Jails or Solaris Zones.
+
+Docker Version:
+
+Docker -v ==>Check version
+Service docker status  ==> check docker service status
+docker image ls  ==> images list
+docker pull tomcat ==> pull image from public repo(Steps => download,extract,pull)
+docker pull ubuntu:18.04 ==> pull by version 
+docker inspect tomcat ==> inspect elements in tomcat image 
+docker image em <image_name>(tomcat) ==> remove image from docker
+docker run -d -P tomcat ==> run tomcat server ==> generate id (da059171a4f171477b42839fb0e3e47140e2d17dcd6e6cfd0af7a583c22e8aec) each run it will generete one container
+docker ps ==> Display all Running images in docker 
+docker stop e34bb1220c02<Con_id> gifted_dijkstra<Con_Name> ==> Stop docker container using container_id and name
+docker ps -a => display all images with all status (running/start/stop) 
+docker start e34bb1220c02 => docker start
+docker re-start e34bb1220c02 => docker restart 
+docker kill e34bb1220c02 => kill container (again we can restart)
+docker rename <Container_name> <original_name> ==> convert container name to user given name
+docker run -d -P tomcat
+docker rm -f <cont_id>
+
+ditached mode (docker run -d tomcat) ditached current terminal and run background 
+ => Not all images can be run in detached mode
+
+
+interactive ( docker run -it tomcat bash)
+ => container run in intall directectory (command line automatically point intall directory)
+ => pointer move to container location
+ex: docker run -it tomcat bash
+   root@ip-172-31-19-234:/usr/local/tomcat# apt-get update
+//install any additional s/w 
+   root@ip-172-31-19-234:/usr/local/tomcat# apt-get install vim	
+
+=> Every cantainer can run in interactive mode
+
+
+
+
+Container life cycle:
+
+1) create
+2) Running 
+3) Stopped
+4) Started
+5) Restarted
+6) Killed
+7) remove 
+
+
+How to connect to running container?
+
+docker exec -it <cont_id> bash  => open the conatiner 
+docker exec <cont_id> touch naresh.txt ==> add file to existing running container
+docker cp new.txt <cont_id>:/temp ==> copying file from outside cont to container
+docker exec <cont_id> ls -l /temp
+
+docker cp <cont_id>:/temp  . => copying file from cont to local folder
+
+
+# Remove cont 
+
+docker rm -f <cont_id>
+
+#DOCKER IMAGE CREATION 
+
+# Manuval process
+
+docker pull unbuntu:18.04
+docker images
+docker run -it unbuntu:18.04 bash
+	apt-get update
+	apt-get install -y vim (y Means Yes option while installing)
+	touch naresh.txt
+	echo "hi there">sample.txt
+Come out of container safely (Ctrl pq)
+Ensure docuker is running using Docker ps
+
+commit container changes which will give us new image
+docker commit -m "Install vim" <cont_id>(which container you want to commit)
+
+do you want to check history of image ?
+docket history ubuntu:18.04/v1 
+
+#DOCKER FILE
+
+FROM unbuntu:18.04  => pull base image from repo 
+RUN apt-get update  => run shell command inside image
+RUN apt-get -y vim   => run statement will execute at build time 
+RUN touch naresh.txt
+RUN echo "hi there">sample.txt 
+COPY <source> <target location>
+EXPOSE <port number>
+CMD <.exe/.sh> run  => it will not on build time means image creation time 
+   it will run once image pull from repo and run from either ditached or intractive mode
+
+
+build docker file 
+Docker build -f dockerfile -t myubuntu:v2-fromdockerfile . 
+
+docker run -d -P(publish port) cont_id
+docker run -d -p 12345:<inside cont_ port number> cont_id ( add port number manuvally)
+
+
+#How to push your image to Dockerhub
+ => docker login
+ => docker tag sampleapp(imagename):v1 <githubrepo)/reponame:sampleapp-v1
+ => docker tag sampleapp:v1 learndevops/edu-evng:sampleapp-v1
+ => docker push lerndevops/edu-evng:sampleapp-v1
+
+
+#DOCKER VOLUMN
+=> Volums are stored in a part of the host filesystem which is managed by docker(/var/lib/docker/volumes/on linux)
+=> Bing mounts: may be stored anywhere on host system .then may even be imported system files or directories.
+	Non-Docker process on the Docker host or Docker conatiner can modify them at any time 
+
+#Create volumn
+=> docker volumn create myvol
+=> docker volumn inspect myvol
+=> docker run -d -P -v myvol:/usr/local/tomcat/logs tomcat
+=> docker run -d -P /tmp/tomcatlogs:/usr/local/tomcat/logs tomcat
+=> history (check history of command)
+
+
+#DOCKER SWARN:
+
+Install docker in all virtuval mechines 
+=>docker swarm init (once run this command it will act like manager node)
+Once run above command it will generate command to join worker nodes
+ docker swarm join --token <token> ip 
+
+=> Run above swarm command in all workers
+
+# All commands in manager node
+=> docker node ls
+
+# Create service in docker swarm in multiple nodes
+=> docker service create --name mysrv --replicas 7 -p 9080:8080 tomcat
+=> docker service ls (display list of services)
+=> docker service ps mysrv (Display all containers running in different nodes)
+
+Manager always take care of your desire state(means replicas if any one delete in worker manager will automatically create replica)
+it is called auto scalling
+
+# Manage mulitple mangers
+
+=> docker node promote <hostName> we can add multiple nodes  (if any manager stop automatically another promoted node will act like manager)
+
+
+# DOCKER NETWORKING
+
+Docker will create default bridge networking between docker hosts
+Dockerby default image are connecting to default network(bridge)
+=>ifconfig return networking info
+
+=> docker inspect (we can check attached server)
+
+create custom bride network:
+
+=>docker network create --drive bridge <mybridge>( it will containe the bridge network funcationality)
+
+#Connect docket container to custom network
+
+=>docker run -d --name cont4 --network mybridge <imagename>
+
+
+
+
